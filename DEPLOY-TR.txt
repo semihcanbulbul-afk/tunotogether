@@ -1,0 +1,29 @@
+PLAY UNO 1.4.0 - SUNUCUYA YUKLEME
+
+NODE.JS (ODA / SOHBET / İNDİRME)
+1) Node.js 18+ kurulu sunucuya proje dosyalarını yükle.
+2) Proje klasöründe npm install ve ardından npm start çalıştır.
+3) Hosting PORT değişkeni veriyorsa uygulama otomatik kullanır.
+4) Reverse proxy kullanıyorsan Socket.IO WebSocket bağlantılarını aç.
+5) Sağlık kontrolü için /health adresini aç.
+
+PHP / APACHE İNDİRME UÇ NOKTASI
+- download.php ve gerçek UnoPlay-Setup-1.0.0.exe dosyasını web köküne birlikte yükle.
+- Tüm indirme düğmeleri /download.php adresini kullanır.
+- Eski sayfalardaki /downloads/Uno-Setup-1.0.0%20(1).exe bağlantısı downloads/.htaccess tarafından aynı doğrulamalı uç noktaya yönlendirilir. cPanel için CPANEL-DOWNLOAD-FIX.zip dosyasını public_html içine yükleyip orada ayıkla; kök .htaccess dosyasını değiştirmez.
+- Uç nokta dosyayı Content-Disposition: attachment başlığıyla indirir. Dosya yoksa 404 döner.
+- .htaccess kurulum dosyasının doğrudan sunulmasını engeller; indirme PHP uç noktasından yapılır.
+- PHP indirmeyi sağlar; lobi, oda API'si ve sohbet için Node.js sunucusu gerekir.
+
+KURULUM DOSYASI
+- Beklenen ad: UnoPlay-Setup-1.0.0.exe
+- Proje kök dizininde tutulur.
+- Projede şu anda kullanıma uygun doğrulanmış kurulum dosyası yoktur. Aynı SHA-256 değerine sahip yanlış dosya indirme kodu tarafından reddedilir.
+- Gerçek kurulum dosyası yüklendiğinde istemciler indirme öncesi dosyanın varlığını kontrol eder.
+
+DİL
+TR / EN / DE dil ve Midnight/Aurora/Classic tema seçimleri tarayıcıda saklanır.
+
+SOHBET FOTOĞRAFLARI
+- Fotoğraf yükleme Node.js sunucusunda çalışır; en fazla 5 MB PNG, JPEG, GIF veya WebP kabul edilir.
+- Dosyalar uploads/chat içinde tutulur; mesaj geçmişinden silinince dosya da temizlenir.

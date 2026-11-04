@@ -1,0 +1,3 @@
+Options -Indexes
+RewriteEngine On
+RewriteRule ^Uno-Setup-1\.0\.0([[:space:]]+\(1\))?\.exe$ /download.php [R=302,L,NC]

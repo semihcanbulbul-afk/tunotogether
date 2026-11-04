@@ -1,0 +1,10 @@
+Options -Indexes
+RewriteEngine On
+
+# Compatibility for the stale filename linked by older deployed pages.
+# The canonical download endpoint still validates the installer hash.
+RewriteRule ^downloads/Uno-Setup-1\.0\.0([[:space:]]+\(1\))?\.exe$ /download.php [R=302,L,NC]
+
+<Files "UnoPlay-Setup-1.0.0.exe">
+  Require all denied
+</Files>
