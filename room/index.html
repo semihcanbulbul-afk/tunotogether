@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="theme-color" content="#09030d">
   <script>try{document.documentElement.dataset.theme=localStorage.getItem('playuno_theme')||'midnight'}catch{}</script>
-  <title>Play Uno — Game Lobby</title>
+  <title>Play Uno — Oda Lobisi</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,11 +78,11 @@
     .warning-icon{width:58px;height:58px;border-radius:16px;margin:0 auto 11px;display:grid;place-items:center;background:rgba(220,38,38,.13);border:1px solid rgba(248,113,113,.22);color:#fb7185;font-size:20px}
     .warning-modal h3{text-align:center}
     .warning-modal #warningText{text-align:center}
-    .download-big{width:100%;border:0;padding:13px;border-radius:12px;background:linear-gradient(110deg,#facc15,#d97706);color:#100907;font-weight:900;font-size:11px;box-shadow:0 12px 28px rgba(234,179,8,.13)}
+        .download-big{width:100%;border:0;padding:13px;border-radius:12px;background:linear-gradient(110deg,#facc15,#d97706);color:#100907;font-weight:900;font-size:11px;box-shadow:0 12px 28px rgba(234,179,8,.13)}
     .download-big:hover{filter:brightness(1.08);transform:translateY(-1px)}
     @media(max-width:900px){.room-grid{grid-template-columns:1fr}.chat-panel{min-height:480px}.chat{min-height:300px}}
     @media(max-width:620px){.container{width:min(100% - 24px,1180px)}.room-top{align-items:flex-start}.room-head-actions{flex-wrap:wrap;justify-content:flex-end}.room-code-wrap{display:none}.players{grid-template-columns:1fr}.panel{padding:16px}.panel-head{flex-direction:column}.mode-select{width:100%}}
-    .room-sound{margin-left:0}.room-brand-mark.image-mark{padding:0}
+  .room-sound{margin-left:0}.room-brand-mark.image-mark{padding:0}
   </style>
 </head>
 <body class="site-body">
@@ -90,18 +90,19 @@
     <header class="room-top">
       <a class="room-brand" href="/">
         <span class="room-brand-mark image-mark"><img src="../assets/logos/logo-mark.png" alt="Play Uno"></span>
-        <span><strong>PLAY UNO</strong><small>GAME LOBBY</small></span>
+        <span><strong>PLAY UNO</strong><small>ODA LOBİSİ</small></span>
       </a>
 
       <div class="room-head-actions">
         <div class="room-code-wrap">
-          <span data-i18n="roomCodeLabel">ROOM CODE</span>
+          <span data-i18n="roomCodeLabel">ODA KODU</span>
           <strong id="roomCode">#UNO-----</strong>
         </div>
-        <button class="mini-btn" id="copyInviteBtn" type="button"><i class="fa-solid fa-copy"></i> <span data-i18n="inviteCopy">Copy Invite</span></button>
-        <button class="mini-btn" id="leaveTopBtn" data-sound="click" type="button"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="backHome">Home</span></button>
-        <button class="mini-btn theme-toggle" type="button" data-theme-toggle aria-label="Change theme" title="Change theme"><i class="fa-solid fa-palette" aria-hidden="true"></i><span data-theme-name>Midnight</span></button>
-        <button class="sound-toggle room-sound" id="soundToggleBtn" type="button" aria-label="Toggle sound"><i class="fa-solid fa-volume-high"></i><span data-i18n="closeSound">Sound On</span></button>
+        <button class="mini-btn" id="copyInviteBtn" type="button"><i class="fa-solid fa-copy"></i> <span data-i18n="inviteCopy">Daveti Kopyala</span></button>
+        <button class="mini-btn" id="leaveTopBtn" data-sound="click" type="button"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="backHome">Ana Sayfa</span></button>
+        <button class="mini-btn theme-toggle" type="button" data-theme-toggle aria-label="Temayı değiştir" title="Temayı değiştir"><i class="fa-solid fa-palette" aria-hidden="true"></i><span data-theme-name>Midnight</span></button>
+        <button class="sound-toggle room-sound" id="soundToggleBtn" type="button" aria-label="Site sesini aç veya kapat"><i class="fa-solid fa-volume-high"></i><span data-i18n="closeSound">Ses Açık</span></button>
+        
       </div>
     </header>
 
@@ -110,10 +111,10 @@
         <div class="panel">
           <div class="panel-head">
             <div>
-              <h1 data-i18n="roomLobby">Room Lobby</h1>
-              <p data-i18n="roomLobbyDesc">Invite friends, choose your avatar and wait until everyone is ready.</p>
+              <h1 data-i18n="roomLobby">Oda Lobisi</h1>
+              <p data-i18n="roomLobbyDesc">Arkadaşlarını davet et, avatarını seç ve hazır olduğunda bekle.</p>
             </div>
-            <select id="modeSelect" class="mode-select" aria-label="Game mode"></select>
+            <select id="modeSelect" class="mode-select" aria-label="Oyun modu"></select>
           </div>
 
           <div id="players" class="players"></div>
@@ -122,56 +123,56 @@
         <div class="panel" style="margin-top:15px">
           <div class="panel-head">
             <div>
-              <h2 data-i18n="roomSetup">Table Setup</h2>
-              <p data-i18n="roomSetupDesc">When everyone is ready, the room owner can control the transition to the game.</p>
+              <h2 data-i18n="roomSetup">Masa Hazırlığı</h2>
+              <p data-i18n="roomSetupDesc">Herkes hazır olduğunda oda sahibi oyuna geçişi kontrol edebilir.</p>
             </div>
             <div class="room-head-pills">
-              <span id="roomCapacity" class="capacity-pill"><i class="fa-solid fa-users"></i> 1 / 4 players</span>
-              <span id="roomStatus" class="status-pill"><i class="fa-solid fa-clock"></i> WAITING</span>
+              <span id="roomCapacity" class="capacity-pill"><i class="fa-solid fa-users"></i> 1 / 4 oyuncu</span>
+              <span id="roomStatus" class="status-pill"><i class="fa-solid fa-clock"></i> BEKLENİYOR</span>
             </div>
           </div>
 
           <div class="setup-row">
-            <button id="readyBtn" class="ready-btn" type="button" data-i18n="ready">READY</button>
-            <button id="profileBtn" class="mini-btn" type="button"><i class="fa-solid fa-user-pen"></i> <span data-i18n="editProfile">Edit My Profile</span></button>
+            <button id="readyBtn" class="ready-btn" type="button" data-i18n="ready">HAZIRIM</button>
+            <button id="profileBtn" class="mini-btn" type="button"><i class="fa-solid fa-user-pen"></i> <span data-i18n="editProfile">Profilimi Düzenle</span></button>
           </div>
 
-          <div id="hostHint" class="host-hint">Preparing connection...</div>
-          <button id="startBtn" class="start-btn" type="button" style="margin-top:12px" data-i18n="start">START GAME</button>
+          <div id="hostHint" class="host-hint">Bağlantı hazırlanıyor...</div>
+          <button id="startBtn" class="start-btn" type="button" style="margin-top:12px" data-i18n="start">OYUNU BAŞLAT</button>
         </div>
 
         <div class="panel room-rules">
           <div class="panel-head" style="margin-bottom:6px">
-            <div><h2 data-i18n="roomRules">Room Rules</h2><p>This lobby is the meeting place before moving into the desktop game.</p></div>
+            <div><h2 data-i18n="roomRules">Oda Kuralları</h2><p>Bu lobi, masaüstü oyuna geçiş öncesi buluşma alanıdır.</p></div>
           </div>
-          <div class="rule-line"><b>01</b><span data-i18n="roomRule1">Room capacity is set by the player count chosen when the room is created.</span></div>
-          <div class="rule-line"><b>02</b><span data-i18n="roomRule2">The room owner can change the mode and start the game.</span></div>
-          <div class="rule-line"><b>03</b><span data-i18n="roomRule3">Starting the game checks that every player has the desktop app.</span></div>
+          <div class="rule-line"><b>01</b><span data-i18n="roomRule1">Oda kapasitesi, oda oluşturulurken seçilen oyuncu sayısına göre belirlenir.</span></div>
+          <div class="rule-line"><b>02</b><span data-i18n="roomRule2">Oda sahibi modu değiştirip oyunu başlatabilir.</span></div>
+          <div class="rule-line"><b>03</b><span data-i18n="roomRule3">Oyunu başlatırken odadaki tüm oyuncuların masaüstü uygulaması kontrol edilir.</span></div>
         </div>
       </section>
 
       <aside class="panel chat-panel">
         <div class="voice-panel">
           <div class="voice-head">
-            <div><div class="voice-title"><i class="fa-solid fa-microphone"></i> <span data-i18n="voice">Voice Chat</span></div><div id="voiceStatus" class="voice-status">Microphone off</div></div>
+            <div><div class="voice-title"><i class="fa-solid fa-microphone"></i> <span data-i18n="voice">Sesli Sohbet</span></div><div id="voiceStatus" class="voice-status">Mikrofon kapalı</div></div>
             <div class="voice-controls">
-              <button id="voiceJoinBtn" class="voice-btn primary" type="button"><i class="fa-solid fa-microphone"></i> <span data-i18n="voiceJoin">Join Voice</span></button>
-              <button id="voiceMuteBtn" class="voice-btn" type="button" disabled title="Mute microphone"><i class="fa-solid fa-microphone-slash"></i></button>
-              <button id="voiceLeaveBtn" class="voice-btn danger" type="button" disabled title="Leave voice chat"><i class="fa-solid fa-phone-slash"></i></button>
+              <button id="voiceJoinBtn" class="voice-btn primary" type="button"><i class="fa-solid fa-microphone"></i> <span data-i18n="voiceJoin">Sese Katıl</span></button>
+              <button id="voiceMuteBtn" class="voice-btn" type="button" disabled title="Mikrofonu kapat"><i class="fa-solid fa-microphone-slash"></i></button>
+              <button id="voiceLeaveBtn" class="voice-btn danger" type="button" disabled title="Sesli sohbetten ayrıl"><i class="fa-solid fa-phone-slash"></i></button>
             </div>
           </div>
           <div id="voiceList" class="voice-list"></div>
         </div>
         <div class="chat-header">
-          <h2 data-i18n="roomChat">Room Chat</h2>
-          <span data-i18n="realtime">REAL TIME</span>
+          <h2 data-i18n="roomChat">Oda Sohbeti</h2>
+          <span data-i18n="realtime">GERÇEK ZAMANLI</span>
         </div>
         <div id="chat" class="chat"></div>
         <form id="chatForm" class="chat-form">
-          <input id="chatInput" maxlength="500" autocomplete="off" data-i18n-placeholder="messagePlaceholder" placeholder="Write a message...">
-          <button type="button" id="chatImageBtn" aria-label="Attach photo" data-i18n-aria="imageUpload" data-i18n-title="imageUpload"><i class="fa-solid fa-image"></i></button>
+          <input id="chatInput" maxlength="500" autocomplete="off" data-i18n-placeholder="messagePlaceholder" placeholder="Bir mesaj yaz...">
+          <button type="button" id="chatImageBtn" aria-label="Fotoğraf ekle" data-i18n-aria="imageUpload" data-i18n-title="imageUpload"><i class="fa-solid fa-image"></i></button>
           <input id="chatImageInput" class="hidden" type="file" accept="image/png,image/jpeg,image/gif,image/webp">
-          <button type="submit" aria-label="Send message" data-i18n-title="send"><i class="fa-solid fa-paper-plane"></i></button>
+          <button type="submit" aria-label="Mesaj gönder" data-i18n-title="send"><i class="fa-solid fa-paper-plane"></i></button>
         </form>
       </aside>
     </div>
@@ -179,34 +180,35 @@
 
   <div id="profileModal" class="modal-backdrop hidden profile-modal" role="dialog" aria-modal="true">
     <div class="modal-card">
-      <button class="modal-close" id="profileCloseBtn" type="button" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close" id="profileCloseBtn" type="button" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-icon yellow"><i class="fa-solid fa-user-pen"></i></div>
-      <h3 data-i18n="profileEdit">Edit Profile</h3>
-      <p data-i18n="profileDesc">Change the name and avatar shown in the room.</p>
-      <label class="field-label"><span data-i18n="username">Username</span><input id="profileName" maxlength="24" placeholder="Enter username" data-i18n-placeholder="username"></label>
-      <div class="label-line"><span data-i18n="chooseAvatar">Choose your avatar</span><small>20</small></div>
+      <h3 data-i18n="profileEdit">Profilini Düzenle</h3>
+      <p data-i18n="profileDesc">Oda içinde görünecek adını ve avatarını değiştir.</p>
+      <label class="field-label"><span data-i18n="username">Kullanıcı adı</span><input id="profileName" maxlength="24" placeholder="Kullanıcı adını yaz" data-i18n-placeholder="username"></label>
+      <div class="label-line"><span data-i18n="chooseAvatar">Avatarını seç</span><small>20</small></div>
       <div id="profileAvatars" class="avatar-grid"></div>
-      <button id="profileSaveBtn" class="modal-action yellow-action" type="button" data-i18n="save">Save</button>
+      <button id="profileSaveBtn" class="modal-action yellow-action" type="button" data-i18n="save">Kaydet</button>
     </div>
   </div>
 
   <div id="warningModal" class="modal-backdrop hidden warning-modal" role="dialog" aria-modal="true" aria-labelledby="warningTitle">
     <div class="modal-card">
-      <button class="modal-close" id="warningCloseBtn" type="button" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close" id="warningCloseBtn" type="button" aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
       <div class="warning-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-      <h3 id="warningTitle" data-i18n="warningStart">Game Could Not Start</h3>
-      <p id="warningText">Checking status...</p>
-      <button id="warningDownloadBtn" class="download-big" type="button"><i class="fa-solid fa-download"></i> <span data-i18n="download">Download Desktop</span></button>
+      <h3 id="warningTitle" data-i18n="warningStart">Oyun Başlatılamadı</h3>
+      <p id="warningText">Kontrol yapılıyor...</p>
+      <a id="warningDownloadBtn" class="download-big" href="https://github.com/semihcanbulbul-afk/tunotogether/releases/download/v1.0.0/UnoPlay-Setup-100.zip" download="UnoPlay-Setup-100.zip" role="button" style="display:inline-block;text-align:center;text-decoration:none;"><i class="fa-solid fa-download"></i> <span data-i18n="download">Download Desktop</span></a>
     </div>
   </div>
 
   <div id="toast" class="toast hidden" role="status"></div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script src="../js/config.js"></script>
-  <script src="../js/i18n.js"></script>
-  <script src="../js/audio.js"></script>
-  <script src="../js/theme.js"></script>
+  <script src="../js/config.js?v=404"></script>
+  <script src="../js/i18n.js?v=404"></script>
+  <script src="../js/audio.js?v=404"></script>
+  <script src="../js/theme.js?v=404"></script>
   <script src="./room.js"></script>
 </body>
 </html>
+

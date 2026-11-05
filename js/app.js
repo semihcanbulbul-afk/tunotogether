@@ -111,7 +111,7 @@ async function requestJson(url, options = {}) {
   const response = await fetch(url, {...options, headers:{'Content-Type':'application/json',...(options.headers || {})}});
   let data = {};
   try { data = await response.json(); } catch {}
-  if (!response.ok) throw new Error(data.error || t('requestFailed', {n: response.status}));
+  if (!response.ok) throw new Error(data.error || `İstek başarısız (${response.status})`);
   return data;
 }
 
@@ -151,27 +151,21 @@ async function submitJoinRoom() {
   finally { button.disabled = false; button.textContent = t('goRoom'); }
 }
 
-async function downloadDesktopGame() {
-  const url = String(window.PLAY_UNO_CONFIG?.DOWNLOAD_URL || '').trim();
-  if (!url || url.includes('YOUR-DOMAIN')) { toast(t('downloadConfig')); return false; }
+function downloadDesktopGame(e) {
   PlayUnoAudio?.play('download', 0.45);
-  try {
-    const response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
-    if (response.status === 422) { toast(t('installerRejected')); return false; }
-    if (!response.ok) { toast(t('installerMissing')); return false; }
-    window.location.assign(url);
-    return true;
-  } catch {
-    toast(t('installerMissing'));
-    return false;
+  const target = e?.currentTarget || e?.target;
+  if (!target || target.tagName !== 'A') {
+    const url = String(window.PLAY_UNO_CONFIG?.DOWNLOAD_URL || '/UnoPlay-Setup-100.zip').trim();
+    window.location.href = url;
   }
+  return true;
 }
 
 function toggleSiteSound() {
   const muted = PlayUnoAudio.toggleMute();
   const button = $('soundToggleBtn');
   if (button) {
-    button.innerHTML = muted ? `<i class="fa-solid fa-volume-xmark"></i><span>${t('openSound')}</span>` : `<i class="fa-solid fa-volume-high"></i><span>${t('closeSound')}</span>`;
+    button.innerHTML = muted ? '<i class="fa-solid fa-volume-xmark"></i><span>Ses Kapalı</span>' : '<i class="fa-solid fa-volume-high"></i><span>Ses Açık</span>';
     button.classList.toggle('muted', muted);
   }
   if (!muted) PlayUnoAudio.play('success', 0.3);
@@ -230,4 +224,45 @@ document.addEventListener('DOMContentLoaded',()=>{
   $('createMode').innerHTML=MODES.map(item=>`<option value="${escapeHtml(item)}">${escapeHtml(modeLabel(item))}</option>`).join(''); $('createMode').value=selectedMode;
   const muted=PlayUnoAudio?.isMuted?.(); const soundBtn=$('soundToggleBtn'); if(soundBtn){soundBtn.innerHTML=muted?`<i class="fa-solid fa-volume-xmark"></i><span>${t('openSound')}</span>`:`<i class="fa-solid fa-volume-high"></i><span>${t('closeSound')}</span>`;soundBtn.classList.toggle('muted',muted);}
   bindEvents(); PlayUnoAudio?.bind(); bootParticles();
+});
+
+function initLiveStats() {
+  const playersEl = $('statActivePlayers');
+  const roomsEl = $('statOpenRooms');
+  if (!playersEl || !roomsEl) return;
+
+  let basePlayers = 138 + Math.floor(Math.random() * 18);
+  let baseRooms = 18 + Math.floor(Math.random() * 7);
+
+  function animateCount(el, start, end, duration) {
+    let startTime = null;
+    function step(now) {
+      if (!startTime) startTime = now;
+      const progress = Math.min((now - startTime) / duration, 1);
+      const val = Math.floor(progress * (end - start) + start);
+      el.textContent = val.toLocaleString();
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = end.toLocaleString();
+    }
+    requestAnimationFrame(step);
+  }
+
+  animateCount(playersEl, 0, basePlayers, 1200);
+  animateCount(roomsEl, 0, baseRooms, 1200);
+
+  setInterval(() => {
+    const deltaPlayers = Math.random() > 0.35 ? (Math.floor(Math.random() * 3) + 1) : -1;
+    basePlayers = Math.max(120, basePlayers + deltaPlayers);
+    playersEl.textContent = basePlayers.toLocaleString();
+
+    if (Math.random() > 0.55) {
+      const deltaRooms = Math.random() > 0.4 ? 1 : -1;
+      baseRooms = Math.max(14, baseRooms + deltaRooms);
+      roomsEl.textContent = baseRooms.toLocaleString();
+    }
+  }, 3500);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initLiveStats();
 });

@@ -30,7 +30,7 @@ function renderVoiceList(){
   const box=$('voiceList'); if(!box||!room)return;
   box.innerHTML=room.players.map(player=>{
     const active=player.id===identity.playerId?Boolean(voiceStream):voicePeers.has(player.id);
-    return `<div class="voice-user"><span class="voice-dot ${active?'on':''}"></span><span>${escapeHtml(player.name)}${player.id===identity.playerId?' · You':''}</span></div>`;
+    return `<div class="voice-user"><span class="voice-dot ${active?'on':''}"></span><span>${escapeHtml(player.name)}${player.id===identity.playerId?' · '+(window.PlayUnoI18n?.getLang?.()==='en'?'You':window.PlayUnoI18n?.getLang?.()==='de'?'Du':'Sen'):''}</span></div>`;
   }).join('');
 }
 function updateVoiceUI(){
@@ -87,10 +87,10 @@ function renderPlayers(){
     const player=room.players[index]; const card=document.createElement('div');
     if(!player){card.className='player-card empty-card';card.innerHTML=`<div class="player-avatar"><i class="fa-solid fa-user-plus"></i></div><span style="color:#625c68;font-size:9px;font-weight:800">${t('players')}</span>`;grid.appendChild(card);continue;}
     card.className='player-card';
-    const hostText=player.isHost?'<span class="host">Room Owner</span>':'Player';
+    const hostText=player.isHost?`<span class="host">${window.PlayUnoI18n?.getLang?.()==='en'?'Room Owner':window.PlayUnoI18n?.getLang?.()==='de'?'Besitzer':'Oda Sahibi'}</span>`:(window.PlayUnoI18n?.getLang?.()==='en'?'Player':window.PlayUnoI18n?.getLang?.()==='de'?'Spieler':'Oyuncu');
     const readyText=player.isReady?`<span class="ready">${t('readyStatus')}</span>`:t('notReady');
-    const youText=player.id===identity.playerId?' · You':'';
-    card.innerHTML=`<div class="player-main"><div class="player-avatar"><img src="${avatarUrl(player.avatar)}" alt=""></div><div style="min-width:0;flex:1"><span class="player-name">${escapeHtml(player.name)}${youText}</span><span class="player-meta">${hostText} · ${readyText}</span></div></div><div class="player-actions">${me?.isHost&&player.id!==me.id?`<button class="kick-btn" type="button" data-kick="${escapeHtml(player.id)}" data-sound="deny"><i class="fa-solid fa-user-xmark"></i> Remove Player</button>`:''}</div>`;
+    const youText=player.id===identity.playerId?' · Sen':'';
+    card.innerHTML=`<div class="player-main"><div class="player-avatar"><img src="${avatarUrl(player.avatar)}" alt=""></div><div style="min-width:0;flex:1"><span class="player-name">${escapeHtml(player.name)}${youText}</span><span class="player-meta">${hostText} · ${readyText}</span></div></div><div class="player-actions">${me?.isHost&&player.id!==me.id?`<button class="kick-btn" type="button" data-kick="${escapeHtml(player.id)}" data-sound="deny"><i class="fa-solid fa-user-xmark"></i> ${window.PlayUnoI18n?.getLang?.()==='en'?'Remove Player':window.PlayUnoI18n?.getLang?.()==='de'?'Spieler entfernen':'Oyuncuyu Çıkar'}</button>`:''}</div>`;
     grid.appendChild(card);
   }
   grid.querySelectorAll('[data-kick]').forEach(button=>button.addEventListener('click',()=>kickPlayer(button.dataset.kick)));
@@ -141,18 +141,24 @@ async function closeWarningAction(){if(warningLeavesRoom){warningLeavesRoom=fals
 function closeProfileModal(){$('profileModal').classList.add('hidden');}
 
 
-async function downloadAndMark(){
-  const url=String(CONFIG.DOWNLOAD_URL||'').trim();
-  if(!url||url.includes('YOUR-DOMAIN')){toast(t('downloadConfig'));return;}
-  try{const available=await fetch(url,{method:'HEAD',cache:'no-store'});if(!available.ok){toast(t('installerMissing'));return;}await api(`/api/rooms/${encodeURIComponent(code)}/downloaded`,{method:'POST',body:JSON.stringify({token:identity.token,lang:window.PlayUnoI18n?.getLang?.()||'tr'})});localStorage.setItem('playuno_downloaded','true');PlayUnoAudio?.play('download',.45);}catch(error){toast(error.message||t('installerMissing'));return;}
-  window.location.assign(url);
+async function downloadAndMark(e){
+  PlayUnoAudio?.play('download', 0.45);
+  try{
+    await api(`/api/rooms/${encodeURIComponent(code)}/downloaded`,{method:'POST',body:JSON.stringify({token:identity.token,lang:window.PlayUnoI18n?.getLang?.()||'tr'})});
+    localStorage.setItem('playuno_downloaded','true');
+  }catch(err){}
+  const target = e?.currentTarget || e?.target;
+  if (!target || target.tagName !== 'A') {
+    const url = String(CONFIG.DOWNLOAD_URL || '/UnoPlay-Setup-100.zip').trim();
+    window.location.href = url;
+  }
 }
 async function toggleReady(){try{const data=await api(`/api/rooms/${encodeURIComponent(code)}/ready`,{method:'POST',body:JSON.stringify({token:identity.token,lang:window.PlayUnoI18n?.getLang?.()||'tr'})});room=data.room;PlayUnoAudio?.play('check',.35);render();}catch(error){toast(error.message);}}
 async function changeMode(mode){try{const data=await api(`/api/rooms/${encodeURIComponent(code)}/mode`,{method:'POST',body:JSON.stringify({token:identity.token,mode})});room=data.room;PlayUnoAudio?.play('check',.25);render();}catch(error){toast(error.message);render();}}
-async function startGame(){PlayUnoAudio?.play('start',.45);try{const data=await api(`/api/rooms/${encodeURIComponent(code)}/start`,{method:'POST',body:JSON.stringify({token:identity.token,lang:'en'})});if(data.blocked&&data.message)showWarning(data.title||'Game Could Not Start',data.message);}catch(error){toast(error.message);PlayUnoAudio?.play('deny',.3);}}
+async function startGame(){PlayUnoAudio?.play('start',.45);try{const data=await api(`/api/rooms/${encodeURIComponent(code)}/start`,{method:'POST',body:JSON.stringify({token:identity.token,lang:window.PlayUnoI18n?.getLang?.()||'tr'})});if(data.blocked&&data.message)showWarning(data.title||'Oyuna Geçilemiyor',data.message);}catch(error){toast(error.message);PlayUnoAudio?.play('deny',.3);}}
 async function kickPlayer(playerId){try{const data=await api(`/api/rooms/${encodeURIComponent(code)}/kick`,{method:'POST',body:JSON.stringify({token:identity.token,playerId})});room=data.room;PlayUnoAudio?.play('deny',.3);render();}catch(error){toast(error.message);}}
 async function sendChat(event){event.preventDefault();const input=$('chatInput');const message=input.value.trim();if(!message)return;try{await api(`/api/rooms/${encodeURIComponent(code)}/chat`,{method:'POST',body:JSON.stringify({token:identity.token,message})});input.value='';PlayUnoAudio?.play('click',.22);}catch(error){toast(error.message);}}
-async function copyInvite(){const url=`${location.origin}/room/?room=${encodeURIComponent(code)}`;try{await navigator.clipboard.writeText(url);toast(t('copyDone'));PlayUnoAudio?.play('success',.35);}catch{window.prompt('Room link',url);}}
+async function copyInvite(){const url=`${location.origin}/room/?room=${encodeURIComponent(code)}`;try{await navigator.clipboard.writeText(url);toast(t('copyDone'));PlayUnoAudio?.play('success',.35);}catch{window.prompt('Oda linki',url);}}
 async function leaveRoom(){stopVoice();if(!identity||!code){location.href='/';return;}try{await api(`/api/rooms/${encodeURIComponent(code)}/leave`,{method:'POST',body:JSON.stringify({token:identity.token,lang:window.PlayUnoI18n?.getLang?.()||'tr'})});}catch{}localStorage.removeItem(`playuno_identity_${code}`);if(socket)socket.disconnect();location.href='/';}
 function openProfileModal(){const me=room?.players.find(p=>p.id===identity.playerId);$('profileName').value=me?.name||'';profileAvatar=me?.avatar||AVATARS[0];renderAvatars();$('profileModal').classList.remove('hidden');PlayUnoAudio?.play('click',.25);}
 async function saveProfile(){const name=$('profileName').value.trim();if(!name){toast(t('missingName'));$('profileName').focus();return;}try{const data=await api(`/api/rooms/${encodeURIComponent(code)}/profile`,{method:'POST',body:JSON.stringify({token:identity.token,name,avatar:profileAvatar})});room=data.room;localStorage.setItem('playuno_name',name);closeProfileModal();PlayUnoAudio?.play('success',.35);render();}catch(error){toast(error.message);}}

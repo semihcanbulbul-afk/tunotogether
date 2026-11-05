@@ -108,7 +108,14 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/uploads/chat', express.static(CHAT_UPLOAD_DIR, { dotfiles: 'deny', fallthrough: true, maxAge: '1h', immutable: true }));
-app.use(express.static(path.join(__dirname), { extensions: ['html'] }));
+app.use(express.static(path.join(__dirname), {
+  extensions: ['html'],
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css') || filePath.endsWith('.json')) {
+      res.set('Cache-Control', 'no-cache, must-revalidate');
+    }
+  }
+}));
 
 app.get('/health', (_req,res)=>res.json({ok:true,service:'play-uno'}));
 
