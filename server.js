@@ -1,4 +1,4 @@
-const path = require("path");
+﻿const path = require("path");
 const crypto = require("crypto");
 const fsPromises = require("fs/promises");
 const express = require("express");
@@ -70,11 +70,11 @@ app.use('/api', (req, res, next) => {
 });
 async function sendInstaller(req, res) {
   const fs = require('fs');
-  let targetFile = path.join(__dirname, 'UnoPlay-Setup-1.0.0.exe');
+  let targetFile = path.join(__dirname, 'UnoPlay-Setup-100.zip');
   if (!fs.existsSync(targetFile)) {
     try {
       const files = fs.readdirSync(__dirname);
-      const exe = files.find(f => f.toLowerCase().endsWith('.exe') && !['cloudflared.exe', 'node.exe'].includes(f.toLowerCase()));
+      const exe = files.find(f => (f.toLowerCase().endsWith('.exe') || f.toLowerCase().endsWith('.zip')) && !['cloudflared.exe', 'node.exe'].includes(f.toLowerCase()));
       if (exe) targetFile = path.join(__dirname, exe);
     } catch {}
   }
@@ -96,6 +96,7 @@ async function sendInstaller(req, res) {
 app.get([
   '/download',
   '/download.php',
+  '/UnoPlay-Setup-100.zip',
   /^\/downloads\/Uno-Setup-1\.0\.0(?:%20|\s+)?(?:\(1\))?\.exe$/i
 ], sendInstaller);
 // Keep server and deployment files out of the public static-file surface.
